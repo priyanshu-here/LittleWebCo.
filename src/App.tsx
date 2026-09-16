@@ -24,6 +24,7 @@ const BlogPage = lazy(() => import('@/pages/BlogPage').then((m) => ({ default: m
 const BlogPostPage = lazy(() => import('@/pages/BlogPostPage').then((m) => ({ default: m.BlogPostPage })))
 const LegalPage = lazy(() => import('@/pages/LegalPage').then((m) => ({ default: m.LegalPage })))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })))
+const DemoPage = lazy(() => import('@/pages/DemoPage').then((m) => ({ default: m.DemoPage })))
 
 /** Old /projects/:slug URLs keep working. */
 function ProjectRedirect() {
@@ -43,7 +44,7 @@ export default function App() {
           <main id="main" tabIndex={-1} className="outline-none">
             <AnimatePresence mode="wait" initial={false} onExitComplete={onExitComplete}>
               <PageTransition key={location.pathname}>
-                <Suspense fallback={<div className="min-h-[60svh]" aria-busy="true" />}>
+                <Suspense fallback={<div className="min-h-screen" aria-busy="true" />}>
                   <Routes location={location}>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/services" element={<ServicesPage />} />
@@ -55,12 +56,14 @@ export default function App() {
                     <Route path="/process" element={<ProcessPage />} />
                     <Route path="/faq" element={<FAQPage />} />
                     <Route path="/contact" element={<ContactPage />} />
+                    <Route path="/demo" element={<DemoPage />} />
                     <Route path="/pricing" element={<Navigate to="/services" replace />} />
                     <Route path="/blog" element={<BlogPage />} />
                     <Route path="/blog/:slug" element={<BlogPostPage />} />
                     <Route path="/privacy-policy" element={<LegalPage />} />
                     <Route path="/terms-and-conditions" element={<LegalPage />} />
                     <Route path="/cookie-policy" element={<LegalPage />} />
+                    <Route path="/refund-policy" element={<LegalPage />} />
                     <Route path="/disclaimer" element={<LegalPage />} />
                     <Route path="*" element={<NotFoundPage />} />
                   </Routes>

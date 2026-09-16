@@ -29,15 +29,6 @@ export function LegalPage() {
                 <p className="type-small mt-4 text-fg-muted">Last updated {site.legal.lastUpdated}</p>
               </Reveal>
 
-              <Reveal delay={460} className="mt-10 rounded-md border border-dashed border-fg/30 bg-bg-2 p-5">
-                <p className="type-label text-accent-text">Draft template</p>
-                <p className="type-small mt-2 text-fg-muted">
-                  This page is a starting template and has not been legally reviewed. Text in square brackets is a
-                  placeholder to be completed. Have the final version checked by a qualified professional before
-                  relying on it.
-                </p>
-              </Reveal>
-
               <div className="mt-14 space-y-12 border-t border-line-c pt-12">
                 {page.sections.map((section, i) => (
                   <Reveal key={section.heading} delay={Math.min(i * 40, 120)}>
@@ -46,6 +37,16 @@ export function LegalPage() {
                       {section.paragraphs.map((p, j) => (
                         <p key={j}>{p}</p>
                       ))}
+                      {section.bullets && (
+                        <ul className="space-y-2">
+                          {section.bullets.map((b) => (
+                            <li key={b} className="flex items-start gap-3">
+                              <span aria-hidden className="mt-2.5 size-1.5 shrink-0 rounded-full bg-accent" />
+                              {b}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                   </Reveal>
                 ))}

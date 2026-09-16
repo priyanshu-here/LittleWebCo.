@@ -119,3 +119,68 @@ Deploy the `dist/` folder, or connect the repository to Vercel / Netlify with th
 - [ ] Have the legal templates reviewed and fill in the bracketed placeholders
 - [ ] Add company social links in `src/data/site.ts` if wanted
 - [ ] Set up Search Console / analytics for the live domain (not configured in this repository)
+
+## Website Demo Builder (`/demo`)
+
+A self-contained feature that generates a personalised website demo from a
+business brief, then converts it into a lead. There is no template gallery: the
+customer describes their business and picks an experience level, and a
+composition engine decides the design.
+
+### How it fits together
+
+```
+src/data/demo/categories.ts   the 21-item dropdown
+src/data/demo/blueprints.ts   one design blueprint per industry  <-- edit to add a category
+src/data/demo/levels.ts       Basic / Business / Professional + the comparison matrix
+src/lib/demo/types.ts         shared types
+src/lib/demo/engine.ts        the composition engine (category inference, sections, copy, lead)
+src/lib/demo/storage.ts       sessionStorage so a refresh does not lose the brief
+src/lib/demo/analytics.ts     no-op analytics shim
+src/lib/web3forms.ts          shared submitter used by BOTH contact forms
+src/components/demo/builder/  the multi-step interface
+src/components/demo/site/     the generated website's components
+src/pages/DemoPage.tsx        orchestrates business -> experience -> building -> demo -> enquiry
+```
+
+### Adding a business category
+
+1. Add `{ id: 'bakery', label: 'Bakery' }` to `categoryOptions` in `src/data/demo/categories.ts`.
+2. Add `'bakery'` to the `CategoryId` union in `src/lib/demo/types.ts`.
+3. Add one entry to `blueprints` in `src/data/demo/blueprints.ts`. TypeScript will
+   tell you exactly which fields are required. `core` is the Basic section order,
+   `full` is the Business/Professional order, `keywords` feed the "Other" inference,
+   and `threeD` should stay `null` unless a 3D scene would depict something real.
+
+Nothing else needs changing: the dropdown, the engine, the renderer and the lead
+payload all read from these files.
+
+### Levels
+
+| Level | Animation | Interaction | 3D |
+| --- | --- | --- | --- |
+| Basic | minimal (no scroll reveals) | basic | never |
+| Business | advanced (reveals, parallax, hover) | advanced | never |
+| Professional | premium | immersive | only where the industry suits it |
+
+3D is resolved by the engine as `level allows it AND blueprint.threeD !== null`.
+It is additionally gated at runtime on viewport width, WebGL support and
+`prefers-reduced-motion`; the 2D composition stays visible underneath as the fallback.
+
+### Leads
+
+"Make It Yours" carries the whole brief into a prefilled enquiry form. Submitting
+sends a lead through the same Web3Forms path as the site's contact form, with
+`Source: Website Demo Builder`, the generated section list and the design
+configuration string. No separate email system, no backend.
+
+### Notes
+
+- Uploaded images stay in the browser as object URLs and are never sent anywhere.
+  They do not survive a page refresh; the rest of the brief does.
+- Where a customer uploads nothing, the demo draws industry-appropriate abstract
+  artwork labelled "Demo image". No stock photography, so no licensing question.
+- Demo statistics and reviews are visibly marked as samples, because we do not
+  know the customer's real numbers and will not invent them.
+- The demo lays out with container queries, so the Desktop/Mobile preview toggle
+  reflows it exactly as a real phone would.

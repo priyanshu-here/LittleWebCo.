@@ -17,7 +17,9 @@ export const site = {
     timeZoneLabel: 'IST · UTC+5:30',
   },
   contact: {
-    email: 'littleweb.coompany@gmail.com',
+    email: 'littleweb.company@gmail.com',
+    /** Prefills the subject line of every mailto link on the site. */
+    emailSubject: 'Project Enquiry - Little Web Co.',
     phone: {
       e164: '+919026799302',
       display: '+91 90267 99302',
@@ -38,13 +40,13 @@ export const site = {
     entityName: '[Registered business name]',
     city: '[City]',
     state: '[State]',
-    lastUpdated: '16 September 2026',
+    lastUpdated: '17 September 2026',
   },
   copyrightYear: 2026,
 } as const
 
 export const links = {
-  email: `mailto:${site.contact.email}`,
+  email: `mailto:${site.contact.email}?subject=${encodeURIComponent(site.contact.emailSubject)}`,
   tel: `tel:${site.contact.phone.e164}`,
   whatsapp: `https://wa.me/${site.contact.whatsapp.number}?text=${encodeURIComponent(
     site.contact.whatsapp.message,
@@ -58,6 +60,7 @@ export const nav = [
   { label: 'Services', to: '/services' },
   { label: 'Work', to: '/work' },
   { label: 'About', to: '/about' },
+  { label: 'Demo', to: '/demo' },
 ] as const
 
 export const footerColumns = [
@@ -69,6 +72,7 @@ export const footerColumns = [
       { label: 'Work', to: '/work' },
       { label: 'About', to: '/about' },
       { label: 'Process', to: '/process' },
+      { label: 'Demo Builder', to: '/demo' },
       { label: 'Contact', to: '/contact' },
     ],
   },
@@ -96,6 +100,7 @@ export const footerColumns = [
       { label: 'Privacy Policy', to: '/privacy-policy' },
       { label: 'Terms & Conditions', to: '/terms-and-conditions' },
       { label: 'Cookie Policy', to: '/cookie-policy' },
+      { label: 'Refund Policy', to: '/refund-policy' },
       { label: 'Disclaimer', to: '/disclaimer' },
     ],
   },

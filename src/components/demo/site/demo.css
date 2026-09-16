@@ -1,0 +1,183 @@
+/* ------------------------------------------------------------------ */
+/* Styles scoped to a generated demo site. The palette arrives as CSS  */
+/* custom properties on .dsite, so each industry gets its own colours  */
+/* without touching the Little Web Co. theme.                          */
+/* ------------------------------------------------------------------ */
+.dsite {
+  background: var(--d-paper);
+  color: var(--d-fg);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  container-type: inline-size;
+  container-name: dsite;
+}
+
+.dsite h1,
+.dsite h2,
+.dsite h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+/* Fluid type driven by the preview width, not the browser window, so the
+   mobile preview frame really looks like a phone. */
+.dsite .d-display {
+  font-size: clamp(2rem, 7cqw, 4.5rem);
+}
+.dsite .d-h2 {
+  font-size: clamp(1.5rem, 4.2cqw, 2.75rem);
+}
+.dsite .d-h3 {
+  font-size: clamp(1.05rem, 2.2cqw, 1.5rem);
+}
+.dsite .d-lead {
+  font-size: clamp(0.95rem, 1.5cqw, 1.2rem);
+}
+.dsite .d-body {
+  font-size: clamp(0.85rem, 1.15cqw, 1rem);
+}
+.dsite .d-label {
+  font-size: clamp(0.62rem, 0.85cqw, 0.72rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.dsite .d-section {
+  padding-block: clamp(2.5rem, 7cqw, 6.5rem);
+}
+.dsite .d-wrap {
+  width: 100%;
+  max-width: 78rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.1rem, 4cqw, 3.5rem);
+}
+
+.dsite .d-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.7rem 1.4rem;
+  font-size: clamp(0.8rem, 1.1cqw, 0.95rem);
+  font-weight: 500;
+  background: var(--d-accent);
+  color: #fff;
+  border: 1px solid var(--d-accent);
+  transition: transform 200ms var(--ease-out), opacity 200ms var(--ease-out);
+}
+.dsite .d-btn:hover {
+  transform: translate3d(0, -2px, 0);
+  opacity: 0.92;
+}
+.dsite .d-btn--ghost {
+  background: transparent;
+  color: var(--d-fg);
+  border-color: color-mix(in srgb, var(--d-fg) 25%, transparent);
+}
+.dsite .d-btn--ghost:hover {
+  border-color: var(--d-fg);
+}
+.dsite .d-btn--onink {
+  background: #fff;
+  color: var(--d-ink);
+  border-color: #fff;
+}
+
+.dsite .d-card {
+  background: var(--d-surface);
+  border: 1px solid var(--d-line);
+  border-radius: 0.75rem;
+  transition: transform 220ms var(--ease-out), border-color 220ms var(--ease-out);
+}
+.dsite[data-interaction='advanced'] .d-card:hover,
+.dsite[data-interaction='immersive'] .d-card:hover {
+  transform: translate3d(0, -4px, 0);
+  border-color: color-mix(in srgb, var(--d-accent) 55%, var(--d-line));
+}
+
+.dsite .d-ink {
+  background: var(--d-ink);
+  color: #f6f5f3;
+}
+.dsite .d-ink .d-muted {
+  color: #b8b4ae;
+}
+.dsite .d-muted {
+  color: var(--d-muted);
+}
+.dsite .d-accent {
+  color: var(--d-accent);
+}
+
+/* Media frames -------------------------------------------------------- */
+.dsite .d-media {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--d-accent) 8%, var(--d-surface));
+  isolation: isolate;
+}
+.dsite .d-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.dsite[data-interaction='advanced'] .d-media img,
+.dsite[data-interaction='immersive'] .d-media img {
+  transition: transform 700ms var(--ease-out);
+}
+.dsite[data-interaction='advanced'] .d-media:hover img,
+.dsite[data-interaction='immersive'] .d-media:hover img {
+  transform: scale(1.04);
+}
+.dsite .d-media__tag {
+  position: absolute;
+  left: 0.6rem;
+  bottom: 0.6rem;
+  z-index: 2;
+  border-radius: 999px;
+  padding: 0.3rem 0.6rem;
+  background: color-mix(in srgb, var(--d-ink) 62%, transparent);
+  color: #fff;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Reveal: only for Business and Professional. Basic stays static. ----- */
+.dsite[data-animation='minimal'] [data-reveal],
+.dsite[data-animation='minimal'] [data-reveal-group] [data-reveal-item] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+.dsite .d-sample {
+  display: inline-block;
+  border: 1px solid color-mix(in srgb, var(--d-accent) 45%, transparent);
+  color: var(--d-accent);
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Preview frame ------------------------------------------------------- */
+.demo-frame {
+  transition: max-width 420ms var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dsite .d-btn:hover,
+  .dsite .d-card:hover,
+  .dsite .d-media:hover img {
+    transform: none;
+  }
+}

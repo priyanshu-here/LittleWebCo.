@@ -1,4 +1,3 @@
-import { links, site } from '@/data/site'
 import { Section } from '@/components/ui/Section'
 import { Container } from '@/components/ui/Container'
 import { Eyebrow } from '@/components/ui/Eyebrow'
@@ -29,14 +28,6 @@ export function FinalCTA() {
             <ScheduleButton variant="secondary" size="lg" />
           </Reveal>
         </div>
-        <Reveal className="type-small mt-16 flex flex-wrap gap-x-10 gap-y-3 border-t border-line-c pt-8 text-fg-muted">
-          <a className="link-line text-fg" href={links.email}>
-            {site.contact.email}
-          </a>
-          <a className="link-line text-fg" href={links.whatsapp} target="_blank" rel="noopener noreferrer">
-            WhatsApp {site.contact.whatsapp.display}
-          </a>
-        </Reveal>
       </Container>
     </Section>
   )

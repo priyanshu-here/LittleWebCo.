@@ -4,9 +4,7 @@ import { links, site } from '@/data/site'
 import { Button } from '@/components/ui/Button'
 import { ArrowDown } from '@/components/ui/Icons'
 import { cn } from '@/lib/utils'
-
-const ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_KEY
-const ENDPOINT = 'https://api.web3forms.com/submit'
+import { submitToWeb3Forms, web3formsConfigured, Web3FormsError } from '@/lib/web3forms'
 
 type Status = 'idle' | 'submitting' | 'success' | 'error'
 
@@ -81,7 +79,7 @@ export function ContactForm({ variant = 'full' }: ContactFormProps) {
     const data = new FormData(form)
     if (data.get('botcheck')) return // honeypot
 
-    if (!ACCESS_KEY) {
+    if (!web3formsConfigured) {
       setStatus('error')
       setError('The form is not connected yet. Please email us directly.')
       return
@@ -91,26 +89,18 @@ export function ContactForm({ variant = 'full' }: ContactFormProps) {
     setError('')
     const entries = Object.fromEntries(data.entries()) as Record<string, string>
     delete entries.botcheck
-    const payload = {
-      access_key: ACCESS_KEY,
-      subject: `New project inquiry from ${entries.name || 'the website'}`,
-      from_name: `${site.name} website`,
-      ...entries,
-    }
 
     try {
-      const res = await fetch(ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(payload),
+      await submitToWeb3Forms({
+        subject: `New project inquiry from ${entries.name || 'the website'}`,
+        fromName: `${site.name} website`,
+        fields: entries,
       })
-      const json = (await res.json()) as { success?: boolean; message?: string }
-      if (!res.ok || !json.success) throw new Error(json.message || 'Something went wrong.')
       setStatus('success')
       form.reset()
     } catch (err) {
       setStatus('error')
-      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again or email us.')
+      setError(err instanceof Web3FormsError ? err.message : 'Something went wrong. Please try again or email us.')
     }
   }
 

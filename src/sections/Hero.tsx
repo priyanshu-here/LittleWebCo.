@@ -33,9 +33,12 @@ export function Hero() {
               {site.name} is an independent digital design and development studio helping businesses turn their ideas
               into modern websites, intuitive interfaces and powerful digital experiences.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap items-center gap-3">
               <ContactButton size="lg" />
-              <Button to="/work" variant="secondary" size="lg">
+              <Button to="/demo" variant="secondary" size="lg">
+                Build My Demo
+              </Button>
+              <Button to="/work" variant="ghost">
                 View Our Work
               </Button>
             </div>
