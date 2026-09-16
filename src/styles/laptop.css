@@ -1,0 +1,325 @@
+/* ------------------------------------------------------------------ */
+/* CSS-only 3D laptop for the hero. Transform/opacity only, no WebGL.  */
+/* The lid opens once on load; nothing animates afterwards.            */
+/* ------------------------------------------------------------------ */
+:root {
+  --laptop-shell-1: #dcd8cf;
+  --laptop-shell-2: #b7b2a8;
+  --laptop-edge: #9d988e;
+  --laptop-bezel: #17161a;
+}
+:root[data-theme='dark'] {
+  --laptop-shell-1: #3d3a35;
+  --laptop-shell-2: #26241f;
+  --laptop-edge: #17161a;
+  --laptop-bezel: #0d0d0f;
+}
+
+.laptop-scene {
+  perspective: 1500px;
+  perspective-origin: 50% 30%;
+  width: 100%;
+}
+
+.laptop {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  transform: rotateY(-12deg) rotateX(2deg);
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .laptop-scene:hover .laptop {
+    transform: rotateY(-8deg) rotateX(0deg);
+  }
+}
+
+.laptop-lid {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  transform-origin: 50% 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--lid));
+  transition: transform 1500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.laptop-lid[data-state='closed'] {
+  --lid: -76deg;
+}
+.laptop-lid[data-state='open'] {
+  --lid: 12deg;
+}
+
+.laptop-screen {
+  position: absolute;
+  inset: 0;
+  border-radius: 1.1rem 1.1rem 0.35rem 0.35rem;
+  background: var(--laptop-bezel);
+  padding: 3%;
+  backface-visibility: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+.laptop-screen::before {
+  /* camera notch */
+  content: '';
+  position: absolute;
+  top: 1.1%;
+  left: 50%;
+  width: 0.7%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #2c2b30;
+  transform: translateX(-50%);
+}
+
+.laptop-display {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 0.4rem;
+  background: var(--bg);
+  color: var(--fg);
+  container-type: inline-size;
+}
+.laptop-display::after {
+  /* screen glare */
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.03) 30%, transparent 48%);
+}
+
+.laptop-lid-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 1.1rem 1.1rem 0.35rem 0.35rem;
+  background: linear-gradient(160deg, var(--laptop-shell-1), var(--laptop-shell-2));
+  transform: rotateY(180deg) translateZ(1px);
+  backface-visibility: hidden;
+  display: grid;
+  place-items: center;
+}
+.laptop-lid-back span {
+  width: 10%;
+  aspect-ratio: 1;
+  border-radius: 24%;
+  background: var(--laptop-edge);
+  opacity: 0.6;
+}
+
+.laptop-base-wrap {
+  position: relative;
+  height: 0;
+  padding-bottom: 15%;
+}
+.laptop-base {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  transform-origin: 50% 0%;
+  transform: rotateX(78deg);
+  border-radius: 0.4rem 0.4rem 1.2rem 1.2rem;
+  background: linear-gradient(180deg, var(--laptop-shell-1), var(--laptop-shell-2));
+  box-shadow: inset 0 -3px 0 var(--laptop-edge);
+  padding: 4% 6% 5%;
+  display: grid;
+  gap: 4%;
+  grid-template-rows: 1fr auto;
+}
+.laptop-keys {
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  gap: 3% 1.2%;
+  padding: 1.5% 2%;
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--laptop-edge) 35%, transparent);
+}
+.laptop-keys span {
+  aspect-ratio: 1 / 0.9;
+  border-radius: 12%;
+  background: color-mix(in srgb, var(--laptop-shell-2) 70%, #000 10%);
+}
+.laptop-trackpad {
+  width: 26%;
+  aspect-ratio: 5 / 3;
+  justify-self: center;
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--laptop-edge) 30%, transparent);
+}
+.laptop-shadow {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: -9%;
+  height: 16%;
+  background: radial-gradient(50% 55% at 50% 50%, rgba(0, 0, 0, 0.32), transparent 72%);
+  transform: translateZ(-2px);
+  pointer-events: none;
+}
+:root[data-theme='dark'] .laptop-shadow {
+  background: radial-gradient(50% 55% at 50% 50%, rgba(0, 0, 0, 0.6), transparent 72%);
+}
+
+/* Mini website rendered on the screen (scales with the lid width via cqw) */
+.ls {
+  font-family: var(--font-sans);
+  line-height: 1.35;
+}
+.ls-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2.6cqw 3.4cqw;
+  border-bottom: 1px solid var(--line-c);
+}
+.ls-brand {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 2.4cqw;
+  letter-spacing: -0.03em;
+}
+.ls-links {
+  display: flex;
+  gap: 2.4cqw;
+}
+.ls-links i {
+  display: block;
+  width: 5cqw;
+  height: 0.9cqw;
+  border-radius: 999px;
+  background: var(--fg-muted);
+  opacity: 0.55;
+}
+.ls-cta,
+.ls-btn {
+  display: inline-block;
+  padding: 1.2cqw 2.6cqw;
+  border-radius: 999px;
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 1.7cqw;
+  font-weight: 500;
+}
+.ls-btn.ghost {
+  background: transparent;
+  color: var(--fg);
+  box-shadow: inset 0 0 0 1px var(--line-c);
+}
+.ls-hero {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 4cqw;
+  padding: 4.6cqw 3.4cqw 3cqw;
+  align-items: center;
+}
+.ls-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 1.2cqw;
+  font-size: 1.35cqw;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.ls-eyebrow::before {
+  content: '';
+  width: 0.9cqw;
+  height: 0.9cqw;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+.ls-h {
+  margin-top: 1.6cqw;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 5.4cqw;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}
+.ls-h em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--accent-display);
+}
+.ls-p {
+  margin-top: 1.8cqw;
+  max-width: 34cqw;
+  font-size: 1.9cqw;
+  color: var(--fg-muted);
+}
+.ls-btns {
+  display: flex;
+  gap: 1.4cqw;
+  margin-top: 2.6cqw;
+}
+.ls-art {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 1.2cqw;
+  background: var(--bg-2);
+  overflow: hidden;
+}
+.ls-art::before {
+  content: '';
+  position: absolute;
+  inset: 12% 14% 24% 14%;
+  border-radius: 1cqw;
+  border: 1px solid var(--line-c);
+  background: var(--surface);
+}
+.ls-art::after {
+  content: '';
+  position: absolute;
+  left: 22%;
+  bottom: 12%;
+  width: 26%;
+  height: 7%;
+  border-radius: 999px;
+  background: var(--color-accent);
+}
+.ls-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2cqw;
+  padding: 0 3.4cqw 3.4cqw;
+}
+.ls-card {
+  padding: 2cqw;
+  border-radius: 1cqw;
+  border: 1px solid var(--line-c);
+  background: var(--surface);
+}
+.ls-card b {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 2cqw;
+  letter-spacing: -0.02em;
+}
+.ls-card i {
+  display: block;
+  margin-top: 1.2cqw;
+  height: 0.8cqw;
+  width: 70%;
+  border-radius: 999px;
+  background: var(--line-c);
+}
+.ls-card i + i {
+  width: 45%;
+  margin-top: 0.8cqw;
+}
+
+/* Static fallback: phones and reduced motion show the laptop already open */
+@media (max-width: 767px), (prefers-reduced-motion: reduce) {
+  .laptop-lid {
+    transition: none;
+    --lid: 12deg !important;
+  }
+  .laptop {
+    transition: none;
+  }
+}

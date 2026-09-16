@@ -1,0 +1,441 @@
+/* Fonts — self-hosted via Fontsource for performance and privacy */
+@import '@fontsource-variable/bricolage-grotesque/opsz.css';
+@import '@fontsource-variable/instrument-sans';
+@import '@fontsource/instrument-serif/400-italic.css';
+
+@import 'tailwindcss';
+@import './laptop.css';
+
+/* ------------------------------------------------------------------ */
+/* Design tokens (static palette)                                       */
+/* ------------------------------------------------------------------ */
+@theme {
+  --color-paper: #f4f1ea;
+  --color-paper-2: #ebe7de;
+  --color-paper-3: #e0dbcf;
+  --color-ink: #141311;
+  --color-ink-2: #1d1b18;
+  --color-ink-3: #2a2825;
+  --color-stone: #8a867e;
+  --color-accent: #e8501e;
+  --color-accent-soft: #ff6b3d;
+
+  --font-display: 'Bricolage Grotesque Variable', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-sans: 'Instrument Sans Variable', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --spacing-gutter: clamp(1.25rem, 4vw, 3.5rem);
+  --spacing-section: clamp(4.5rem, 10vw, 9rem);
+  --spacing-section-sm: clamp(3rem, 7vw, 6rem);
+  --container-content: 90rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Theme roles                                                          */
+/*   html[data-theme]      → global light / dark mode                    */
+/*   [data-surface=inverse] → a section that contrasts with the page    */
+/* ------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+  --fg: #141311;
+  --bg: #f4f1ea;
+  --bg-2: #ebe7de;
+  --bg-3: #e0dbcf;
+  --surface: #f9f7f2;
+  --fg-muted: #6b675f;
+  --line-c: #d6d1c6;
+  --accent-text: #b33a10;
+  --accent-display: #e8501e;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --fg: #f2efe8;
+  --bg: #121110;
+  --bg-2: #1a1917;
+  --bg-3: #242220;
+  --surface: #181715;
+  --fg-muted: #a6a199;
+  --line-c: #2c2a27;
+  --accent-text: #ff7a4d;
+  --accent-display: #ff6b3d;
+}
+
+:root:not([data-theme='dark']) [data-surface='inverse'] {
+  color-scheme: dark;
+  --fg: #f4f1ea;
+  --bg: #141311;
+  --bg-2: #1d1b18;
+  --bg-3: #2a2825;
+  --surface: #1a1816;
+  --fg-muted: #a9a49b;
+  --line-c: #35322d;
+  --accent-text: #ff6b3d;
+  --accent-display: #ff6b3d;
+}
+
+:root[data-theme='dark'] [data-surface='inverse'] {
+  --bg: #1b1917;
+  --bg-2: #242220;
+  --bg-3: #2e2b28;
+  --surface: #211f1c;
+  --line-c: #383430;
+}
+
+@theme inline {
+  --color-fg: var(--fg);
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+  --color-surface: var(--surface);
+  --color-fg-muted: var(--fg-muted);
+  --color-line-c: var(--line-c);
+  --color-accent-text: var(--accent-text);
+  --color-accent-display: var(--accent-display);
+}
+
+/* ------------------------------------------------------------------ */
+/* Motion system                                                        */
+/*   UI interactions 180–240ms · entrances/reveals 480–600ms            */
+/*   Only opacity + transform are animated.                             */
+/* ------------------------------------------------------------------ */
+:root {
+  --dur-fast: 180ms;
+  --dur-base: 240ms;
+  --dur-slow: 600ms;
+  --reveal-y: 24px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --dur-slow: 460ms;
+    --reveal-y: 14px;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                 */
+/* ------------------------------------------------------------------ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    background-color: var(--bg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    text-wrap: balance;
+    font-weight: 500;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+/* Theme switch: brief colour transition, removed after it completes */
+html.theme-switching,
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out) !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* Typography scale                                                     */
+/* ------------------------------------------------------------------ */
+@utility type-display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.75rem, 8.4vw, 8.75rem);
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  font-optical-sizing: auto;
+}
+
+@utility type-h1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.625rem, 6.4vw, 6.5rem);
+  line-height: 0.96;
+  letter-spacing: -0.032em;
+  font-optical-sizing: auto;
+}
+
+@utility type-h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.125rem, 4.6vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.028em;
+  font-optical-sizing: auto;
+}
+
+@utility type-h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  font-optical-sizing: auto;
+}
+
+@utility type-h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+@utility type-lead {
+  font-size: clamp(1.125rem, 1.45vw, 1.375rem);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+}
+
+@utility type-body {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+@utility type-small {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+@utility type-label {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+@utility type-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+@utility type-num {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* ------------------------------------------------------------------ */
+/* Utilities                                                            */
+/* ------------------------------------------------------------------ */
+@utility transition-ui {
+  transition-property: color, background-color, border-color, opacity, transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-out);
+}
+
+@utility transition-fast {
+  transition-property: color, background-color, border-color, opacity, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility grid-paper {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--fg) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--fg) 7%, transparent) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+}
+
+@utility grid-ink {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--color-paper) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-paper) 6%, transparent) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+}
+
+@utility hatch {
+  background-image: repeating-linear-gradient(-45deg, currentColor 0, currentColor 1px, transparent 1px, transparent 7px);
+}
+
+/* Underline that grows in on hover (used in the footer) */
+.link-hover-line {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size var(--dur-base) var(--ease-out);
+}
+.link-hover-line:hover,
+.link-hover-line:focus-visible {
+  background-size: 100% 1px;
+}
+
+/* Underline link */
+.link-line {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size var(--dur-base) var(--ease-out);
+}
+.link-line:hover,
+.link-line:focus-visible {
+  background-size: 0% 1px;
+  background-position: 100% 100%;
+}
+
+/* ------------------------------------------------------------------ */
+/* Scroll reveal (IntersectionObserver adds .is-visible)                */
+/* ------------------------------------------------------------------ */
+[data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, var(--reveal-y), 0);
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+  transition-delay: var(--delay, 0ms);
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+[data-reveal-group] [data-reveal-item] {
+  opacity: 0;
+  transform: translate3d(0, var(--reveal-y), 0);
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 70ms + var(--delay, 0ms));
+}
+[data-reveal-group].is-visible [data-reveal-item] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Split-word headline rise (CSS keyframes; runs once) */
+.split-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+.split-word > span {
+  display: inline-block;
+  transform: translate3d(0, 110%, 0);
+}
+.split-run .split-word > span,
+[data-reveal].is-visible .split-word > span {
+  animation: split-rise 0.9s var(--ease-expo) forwards;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes split-rise {
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Accordion panel: grid-row transition instead of animating height */
+.acc-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--dur-base) var(--ease-out),
+    opacity var(--dur-base) var(--ease-out);
+}
+.acc-panel[data-open='true'] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.acc-panel > div {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------ */
+/* Reduced motion: keep everything visible and functional               */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  [data-reveal],
+  [data-reveal-group] [data-reveal-item] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .split-word > span {
+    transform: none !important;
+    animation: none !important;
+  }
+}
